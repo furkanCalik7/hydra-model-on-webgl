@@ -1,15 +1,10 @@
 var canvas;
 var gl;
 
-var numVertices = 36;
-
-var pointsArray = [];
-var colorsArray = [];
-
-var near = -1;
-var far = 1;
+var near = -3;
+var far = 3;
 var radius = 1.0;
-var theta = 0.0;
+var theta = (Math.PI / 180.0) * 90;
 var phi = 0.0;
 var dr = (5.0 * Math.PI) / 180.0;
 
@@ -60,10 +55,10 @@ window.onload = function init() {
 
   var vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(indeces), gl.STATIC_DRAW);
 
   var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
 
   modelView = gl.getUniformLocation(program, "modelViewMatrix");
@@ -114,6 +109,6 @@ var render = function () {
   gl.uniformMatrix4fv(modelView, false, flatten(mvMatrix));
   gl.uniformMatrix4fv(projection, false, flatten(pMatrix));
 
-  gl.drawArrays(gl.TRIANGLES, 0, numVertices);
+  gl.drawArrays(gl.TRIANGLES, 0, indeces.length);
   requestAnimFrame(render);
 };
