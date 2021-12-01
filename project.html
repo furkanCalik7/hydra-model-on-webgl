@@ -17,7 +17,8 @@
 
   void main() 
   {
-      gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+      //gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+       gl_Position = projectionMatrix * modelViewMatrix * vPosition;
      // gl_Position = vPosition;
       fColor = vColor;
   } 

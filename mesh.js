@@ -8,8 +8,29 @@ var vertexColors = [
   vec4(0.0, 1.0, 1.0, 1.0), // cyan
   vec4(1.0, 1.0, 1.0, 1.0), // white
 ];
+
+// Red => x
+// Yellow => y
+// Green => z
+function constructCoordinateSystem() {
+  for (var i = 0; i < 60; i++) {
+    indeces.push(vec3(i * 0.1, 0, 0));
+    colorsArray.push(vertexColors[1]);
+    indeces.push(vec3(-i * 0.1, 0, 0));
+    colorsArray.push(vertexColors[1]);
+    indeces.push(vec3(0, i * 0.1, 0));
+    colorsArray.push(vertexColors[2]);
+    indeces.push(vec3(0, -i * 0.1, 0));
+    colorsArray.push(vertexColors[2]);
+    indeces.push(vec3(0, 0, i * 0.1));
+    colorsArray.push(vertexColors[3]);
+    indeces.push(vec3(0, 0, -i * 0.1));
+    colorsArray.push(vertexColors[3]);
+  }
+}
+
 // Quad method is sufficient in this form
-function quad(a, b, c, d, colorIndex) {
+function quadBody(a, b, c, d, colorIndex) {
   indeces.push(meshVertexes[a]);
   colorsArray.push(vertexColors[colorIndex]);
   indeces.push(meshVertexes[b]);
@@ -24,38 +45,65 @@ function quad(a, b, c, d, colorIndex) {
   colorsArray.push(vertexColors[colorIndex]);
 }
 
-// Each face determines two triangles
+function quadTail1(a, b, c, d, colorIndex) {
+  indeces.push(tail1Vertexes[a]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail1Vertexes[b]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail1Vertexes[d]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail1Vertexes[b]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail1Vertexes[c]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail1Vertexes[d]);
+  colorsArray.push(vertexColors[colorIndex]);
+}
 
-function colorCube() {
+// Each face determines two triangles
+var BODY_STARTING_VERTEX = 360;
+var BODY_QUAD_LENGTH = 30;
+var BODY_VERTEX_FINISH = BODY_STARTING_VERTEX + BODY_QUAD_LENGTH * 6 - 1;
+function body() {
   // Quad to render body of hydra
-  quad(18, 21, 10, 3, 1);
-  quad(0, 26, 28, 12, 2);
-  quad(8, 5, 7, 10, 3);
-  quad(25, 13, 1, 19, 4);
-  quad(17, 23, 14, 2, 5);
-  quad(0, 12, 22, 16, 6);
-  quad(16, 22, 23, 17, 7);
-  quad(24, 18, 3, 15, 1);
-  quad(24, 18, 19, 25, 2);
-  quad(12, 28, 30, 22, 3);
-  quad(22, 30, 32, 23, 4);
-  quad(4, 6, 9, 11, 5);
-  quad(1, 8, 20, 19, 6);
-  quad(18, 19, 20, 21, 7);
-  quad(24, 25, 31, 33, 1);
-  quad(30, 31, 33, 32, 2);
-  quad(29, 13, 25, 31, 3);
-  quad(28, 29, 31, 30, 4);
-  quad(6, 7, 10, 9, 4);
-  quad(4, 5, 8, 11, 6);
-  quad(27, 1, 13, 29, 7);
-  quad(26, 27, 29, 28, 1);
-  quad(5, 4, 6, 7, 2);
-  quad(2, 14, 15, 3, 3);
-  quad(2, 3, 10, 9, 5);
-  quad(14, 15, 24, 23, 6);
-  quad(9, 34, 17, 2, 7);
-  quad(34, 35, 16, 17, 1);
-  quad(35, 11, 0, 16, 2);
-  quad(11, 0, 1, 8, 3);
+  quadBody(18, 21, 10, 3, 1);
+  quadBody(0, 26, 28, 12, 2);
+  quadBody(8, 5, 7, 10, 3);
+  quadBody(25, 13, 1, 19, 4);
+  quadBody(17, 23, 14, 2, 5);
+  quadBody(0, 12, 22, 16, 6);
+  quadBody(16, 22, 23, 17, 7);
+  quadBody(24, 18, 3, 15, 1);
+  quadBody(24, 18, 19, 25, 2);
+  quadBody(12, 28, 30, 22, 3);
+  quadBody(22, 30, 32, 23, 4);
+  quadBody(4, 6, 9, 11, 5);
+  quadBody(1, 8, 20, 19, 6);
+  quadBody(18, 19, 20, 21, 7);
+  quadBody(24, 25, 31, 33, 1);
+  quadBody(30, 31, 33, 32, 2);
+  quadBody(29, 13, 25, 31, 3);
+  quadBody(28, 29, 31, 30, 4);
+  quadBody(6, 7, 10, 9, 4);
+  quadBody(4, 5, 8, 11, 6);
+  quadBody(27, 1, 13, 29, 7);
+  quadBody(26, 27, 29, 28, 1);
+  quadBody(5, 4, 6, 7, 2);
+  quadBody(2, 14, 15, 3, 3);
+  quadBody(2, 3, 10, 9, 5);
+  quadBody(14, 15, 24, 23, 6);
+  quadBody(9, 34, 17, 2, 7);
+  quadBody(34, 35, 16, 17, 1);
+  quadBody(35, 11, 0, 16, 2);
+  quadBody(11, 0, 1, 8, 3);
+}
+var TAIL1_QUAD_lENGTH = 6;
+var TAIL1_VERTEX_LAST = BODY_VERTEX_FINISH + TAIL1_QUAD_lENGTH * 6;
+function tail1() {
+  quadTail1(0, 1, 3, 2, 1);
+  quadTail1(2, 3, 7, 6, 1);
+  quadTail1(0, 1, 5, 4, 1);
+  quadTail1(6, 4, 0, 2, 1);
+  quadTail1(5, 7, 3, 1, 5);
+  quadTail1(4, 5, 7, 6, 6);
 }
