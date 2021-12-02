@@ -1,5 +1,6 @@
 var canvas;
 var gl;
+var vPosition;
 
 var near = -4;
 var far = 4;
@@ -15,8 +16,11 @@ var bottom = -4.0;
 
 var eye;
 
-var mesh;
-var tailmesh;
+var BODY_MESH;
+var TAIL1_MESH;
+var TAIL2_MESH;
+var TAIL3_MESH;
+var TAIL4_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -25,6 +29,15 @@ const up = vec3(0.0, 1.0, 0.0);
 var modelViewMatrix, projectionMatrix;
 var modelViewLoc, projectionLoc;
 var matrixStack = [];
+
+var sliderValue1 = 0;
+var sliderValue2 = 0;
+var sliderValue3 = 0;
+var sliderValue4 = 0;
+var sliderValue5 = 0;
+var sliderValue6 = 0;
+var sliderValue7 = 0;
+var sliderValue8 = 0;
 
 // The angles of joints
 var jointAngles = {
@@ -35,6 +48,8 @@ var jointAngles = {
 var BODY_ID = 0;
 var TAIL1_ID = 1;
 var TAIL2_ID = 2;
+var TAIL3_ID = 3;
+var TAIL4_ID = 4;
 
 // Hydra nodes array
 var numOfNodes = 2;
@@ -67,31 +82,36 @@ function initHydraNodes(id) {
   var m = mat4();
   switch (id) {
     case BODY_ID:
-      m = rotate(60, 0, 1, 0);
-      m = mult(m, scale4(1, 1, 1));
-
+      m = mult(m, scale4(2, 2, 2));
       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
       var m = mat4();
       break;
     case TAIL1_ID:
-      m = translate(5.04511, 0.738529, -0.19105);
-      m = mult(m, scale4(0.5, 0.5, 0.5));
-      m = mult(m, rotate(90, 1, 0, 0));
+      m = translate(0.6, -0.15, 0);
+
       hydraFigure[TAIL1_ID] = createNode(m, tail1Render, null, TAIL2_ID);
       var m = mat4();
       break;
     case TAIL2_ID:
-      m = translate(2.2, -0.6, -0.118111);
+      m = translate(0.33, -0.06, 0);
 
-      m = mult(m, scale4(0.805881, 0.805881, 0.805881));
-      m = hydraFigure[TAIL2_ID] = createNode(m, tail2Render, null, null);
+      m = hydraFigure[TAIL2_ID] = createNode(m, tail2Render, null, TAIL3_ID);
+      var m = mat4();
+      break;
+    case TAIL3_ID:
+      m = translate(0.29, 0.13, 0);
+      m = hydraFigure[TAIL3_ID] = createNode(m, tail3Render, null, TAIL4_ID);
+      var m = mat4();
+      break;
+    case TAIL4_ID:
+      m = translate(0.26, 0.14, 0);
+      m = hydraFigure[TAIL3_ID] = createNode(m, tail4Render, null, null);
       var m = mat4();
       break;
   }
 }
 
 var program;
-
 
 function preorder(id) {
   if (id == null) return;
@@ -110,25 +130,140 @@ function preorder(id) {
 var instanceMatrix;
 
 function bodyRender() {
-  // instanceMatrix = mult(modelViewMatrix, scale4(1, 1, 1));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-  // console.log("reached");
-  gl.drawArrays(gl.TRIANGLES, BODY_STARTING_VERTEX, BODY_QUAD_LENGTH * 6);
+  gl.bindBuffer(gl.ARRAY_BUFFER, BODY_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    BODY_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, BODY_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    BODY_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
 }
 
 function tail1Render() {
-  // instanceMatrix = mult(modelViewMatrix, scale4(0.1, 0.1, 0.1));
-  // instanceMatrix = mult(instanceMatrix, rotate(90, 1, 0, 0));
+  instanceMatrix = translate(-0.3, 0.075, 0);
+  instanceMatrix = mult(
+    instanceMatrix,
+    rotate((sliderValue8 + 2) * 25, 0, 0, 1)
+  );
+  instanceMatrix = mult(instanceMatrix, translate(0.3, -0.075, 0));
+
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-  gl.drawArrays(gl.TRIANGLES, BODY_VERTEX_FINISH + 1, TAIL1_QUAD_lENGTH * 6);
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL1_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    TAIL1_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, TAIL1_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    TAIL1_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
 }
 
 function tail2Render() {
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-  gl.drawArrays(gl.TRIANGLES, TAIL1_VERTEX_LAST + 1, TAIL2_QUAD_LENGTH * 6);
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL2_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    TAIL2_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, TAIL2_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    TAIL2_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
 }
 
-//
+function tail3Render() {
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL3_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    TAIL3_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, TAIL3_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    TAIL3_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function tail4Render() {
+  instanceMatrix = translate(-0.13, -0.07, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(60, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.13, 0.07, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL4_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    TAIL4_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, TAIL4_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    TAIL4_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function meshInitilization() {
+  BODY_MESH = new OBJ.Mesh($("#body_data").html());
+  TAIL1_MESH = new OBJ.Mesh($("#tail1_data").html());
+  TAIL2_MESH = new OBJ.Mesh($("#tail2_data").html());
+  TAIL3_MESH = new OBJ.Mesh($("#tail3_data").html());
+  TAIL4_MESH = new OBJ.Mesh($("#tail4_data").html());
+
+  OBJ.initMeshBuffers(gl, BODY_MESH);
+  initHydraNodes(BODY_ID);
+  OBJ.initMeshBuffers(gl, TAIL1_MESH);
+  initHydraNodes(TAIL1_ID);
+  OBJ.initMeshBuffers(gl, TAIL2_MESH);
+  initHydraNodes(TAIL2_ID);
+  OBJ.initMeshBuffers(gl, TAIL3_MESH);
+  initHydraNodes(TAIL3_ID);
+  OBJ.initMeshBuffers(gl, TAIL4_MESH);
+  initHydraNodes(TAIL4_ID);
+}
 
 window.onload = function init() {
   const canvas = document.createElement("canvas");
@@ -160,13 +295,9 @@ window.onload = function init() {
   gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vColor);
 
-  mesh = new OBJ.Mesh($("#body_data").html());
-  tailmesh = new OBJ.Mesh($("#tail1_data").html());
-  console.log(tailmesh);
+  meshInitilization();
 
-  OBJ.initMeshBuffers(gl, mesh);
-  OBJ.initMeshBuffers(gl, tailmesh);
-
+  vPosition = gl.getAttribLocation(program, "vPosition");
   modelViewLoc = gl.getUniformLocation(program, "modelViewMatrix");
   projectionLoc = gl.getUniformLocation(program, "projectionMatrix");
 
@@ -208,66 +339,57 @@ var render = function () {
     radius * Math.sin(theta),
     radius * Math.cos(phi)
   );
-
+  sliderInitilization();
   mvMatrix = lookAt(eye, at, up);
   pMatrix = ortho(left, right, bottom, ytop, near, far);
 
   modelViewMatrix = mat4();
   modelViewMatrix = mult(modelViewMatrix, mvMatrix);
 
-  //gl.drawArrays(gl.TRIANGLES, 0, 180);
-
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
 
-  // gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
-  // var vPosition = gl.getAttribLocation(program, "vPosition");
-  // gl.vertexAttribPointer(
-  //   vPosition,
-  //   mesh.vertexBuffer.itemSize,
-  //   gl.FLOAT,
-  //   false,
-  //   0,
-  //   0
-  // );
-
-  // gl.enableVertexAttribArray(vPosition);
-  // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
-
-  // gl.drawElements(
-  //   gl.TRIANGLES,
-  //   mesh.indexBuffer.numItems,
-  //   gl.UNSIGNED_SHORT,
-  //   0
-  // );
-
-  modelViewMatrix = mult(modelViewMatrix, translate(0.6, -0.1, 0));
-  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
-  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, tailmesh.vertexBuffer);
-  var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(
-    vPosition,
-    tailmesh.vertexBuffer.itemSize,
-    gl.FLOAT,
-    false,
-    0,
-    0
-  );
-
-  gl.enableVertexAttribArray(vPosition);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tailmesh.indexBuffer);
-
-  gl.drawElements(
-    gl.TRIANGLES,
-    tailmesh.indexBuffer.numItems,
-    gl.UNSIGNED_SHORT,
-    0
-  );
+  preorder(BODY_ID);
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
 
   requestAnimFrame(render);
 };
+
+function sliderInitilization() {
+  var slider1 = document.getElementById("slider1");
+  var output1 = document.getElementById("output1");
+  sliderValue1 = setValue(slider1, output1);
+  var slider2 = document.getElementById("slider2");
+  var output2 = document.getElementById("output2");
+  sliderValue2 = setValue(slider2, output2);
+  var slider3 = document.getElementById("slider3");
+  var output3 = document.getElementById("output3");
+  sliderValue3 = setValue(slider3, output3);
+  var slider4 = document.getElementById("slider4");
+  var output4 = document.getElementById("output4");
+  sliderValue4 = setValue(slider4, output4);
+  var slider5 = document.getElementById("slider5");
+  var output5 = document.getElementById("output5");
+  sliderValue5 = setValue(slider5, output5);
+  var slider6 = document.getElementById("slider6");
+  var output6 = document.getElementById("output6");
+  sliderValue6 = setValue(slider6, output6);
+  var slider7 = document.getElementById("slider7");
+  var output7 = document.getElementById("output7");
+  sliderValue7 = setValue(slider7, output7);
+  var slider8 = document.getElementById("slider8");
+  var output8 = document.getElementById("output8");
+  sliderValue8 = setValue(slider8, output8);
+}
+
+function setValue(slider, output) {
+  output.innerHTML = slider.value / 25 - 2;
+  console.log(output);
+  slider.oninput = function () {
+    output.innerHTML = this.value / 25 - 2;
+    return output.innerHTML;
+  };
+  return output.innerHTML;
+}
