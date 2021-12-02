@@ -92,32 +92,6 @@ function initHydraNodes(id) {
 
 var program;
 
-// function initHydraNodes(id) {
-//   var m = mat4();
-//   switch (id) {
-//     case BODY_ID:
-//       m = rotate(60, 0, 1, 0);
-//       m = mult(m, scale4(1, 1, 1));
-
-//       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
-//       var m = mat4();
-//       break;
-//     case TAIL1_ID:
-//       m = translate(0.436284, 0.008484, -0.078257);
-//       m = mult(m, scale4(0.5, 0.5, 0.5));
-//       m = mult(m, rotate(90, 1, 0, 0));
-//       hydraFigure[TAIL1_ID] = createNode(m, tail1Render, null, TAIL2_ID);
-//       var m = mat4();
-//       break;
-//     case TAIL2_ID:
-//       m = translate(2.2, -0.6, -0.118111);
-
-//       m = mult(m, scale4(0.805881, 0.805881, 0.805881));
-//       m = hydraFigure[TAIL2_ID] = createNode(m, tail2Render, null, null);
-//       var m = mat4();
-//       break;
-//   }
-// }
 
 function preorder(id) {
   if (id == null) return;
