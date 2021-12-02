@@ -1,19 +1,22 @@
 var canvas;
 var gl;
 
-var near = -2;
-var far = 2;
+var near = -4;
+var far = 4;
 var radius = 1.0;
 var theta = (Math.PI / 180.0) * 120;
 var phi = 20.0;
 var dr = (5.0 * Math.PI) / 180.0;
 
-var left = -2.0;
-var right = 2.0;
-var ytop = 2.0;
-var bottom = -2.0;
+var left = -4.0;
+var right = 4.0;
+var ytop = 4.0;
+var bottom = -4.0;
 
 var eye;
+
+var mesh;
+var tailmesh;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -31,6 +34,7 @@ var jointAngles = {
 // Mesh IDs
 var BODY_ID = 0;
 var TAIL1_ID = 1;
+var TAIL2_ID = 2;
 
 // Hydra nodes array
 var numOfNodes = 2;
@@ -64,20 +68,56 @@ function initHydraNodes(id) {
   switch (id) {
     case BODY_ID:
       m = rotate(60, 0, 1, 0);
-      m = mult(m, scale4(2, 2, 2));
+      m = mult(m, scale4(1, 1, 1));
 
       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
       var m = mat4();
       break;
     case TAIL1_ID:
-      m = translate(0.436284, 0.008484, -0.078257);
-      m = mult(m, scale4(0.1, 0.1, 0.1));
+      m = translate(5.04511, 0.738529, -0.19105);
+      m = mult(m, scale4(0.5, 0.5, 0.5));
       m = mult(m, rotate(90, 1, 0, 0));
-      hydraFigure[TAIL1_ID] = createNode(m, tail1Render, null, null);
+      hydraFigure[TAIL1_ID] = createNode(m, tail1Render, null, TAIL2_ID);
+      var m = mat4();
+      break;
+    case TAIL2_ID:
+      m = translate(2.2, -0.6, -0.118111);
+
+      m = mult(m, scale4(0.805881, 0.805881, 0.805881));
+      m = hydraFigure[TAIL2_ID] = createNode(m, tail2Render, null, null);
       var m = mat4();
       break;
   }
 }
+
+var program;
+
+// function initHydraNodes(id) {
+//   var m = mat4();
+//   switch (id) {
+//     case BODY_ID:
+//       m = rotate(60, 0, 1, 0);
+//       m = mult(m, scale4(1, 1, 1));
+
+//       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
+//       var m = mat4();
+//       break;
+//     case TAIL1_ID:
+//       m = translate(0.436284, 0.008484, -0.078257);
+//       m = mult(m, scale4(0.5, 0.5, 0.5));
+//       m = mult(m, rotate(90, 1, 0, 0));
+//       hydraFigure[TAIL1_ID] = createNode(m, tail1Render, null, TAIL2_ID);
+//       var m = mat4();
+//       break;
+//     case TAIL2_ID:
+//       m = translate(2.2, -0.6, -0.118111);
+
+//       m = mult(m, scale4(0.805881, 0.805881, 0.805881));
+//       m = hydraFigure[TAIL2_ID] = createNode(m, tail2Render, null, null);
+//       var m = mat4();
+//       break;
+//   }
+// }
 
 function preorder(id) {
   if (id == null) return;
@@ -109,10 +149,14 @@ function tail1Render() {
   gl.drawArrays(gl.TRIANGLES, BODY_VERTEX_FINISH + 1, TAIL1_QUAD_lENGTH * 6);
 }
 
+function tail2Render() {
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.drawArrays(gl.TRIANGLES, TAIL1_VERTEX_LAST + 1, TAIL2_QUAD_LENGTH * 6);
+}
+
 //
 
 window.onload = function init() {
-  // Construct canvas
   const canvas = document.createElement("canvas");
   canvas.height = 800;
   canvas.width = 800;
@@ -127,19 +171,12 @@ window.onload = function init() {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
-  //
-  //  Load shaders and initialize attribute buffers
-  //
-  var program = initShaders(gl, "vertex-shader", "fragment-shader");
+  program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
 
   // Hydra Initilazition programs
   constructCoordinateSystem();
   modelViewMatrix = mat4();
-  initHydraNodes(BODY_ID);
-  initHydraNodes(TAIL1_ID);
-  body();
-  tail1();
 
   var cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -149,13 +186,12 @@ window.onload = function init() {
   gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vColor);
 
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(indeces), gl.STATIC_DRAW);
+  mesh = new OBJ.Mesh($("#body_data").html());
+  tailmesh = new OBJ.Mesh($("#tail1_data").html());
+  console.log(tailmesh);
 
-  var vPosition = gl.getAttribLocation(program, "vPosition");
-  gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(vPosition);
+  OBJ.initMeshBuffers(gl, mesh);
+  OBJ.initMeshBuffers(gl, tailmesh);
 
   modelViewLoc = gl.getUniformLocation(program, "modelViewMatrix");
   projectionLoc = gl.getUniformLocation(program, "projectionMatrix");
@@ -201,11 +237,63 @@ var render = function () {
 
   mvMatrix = lookAt(eye, at, up);
   pMatrix = ortho(left, right, bottom, ytop, near, far);
+
   modelViewMatrix = mat4();
   modelViewMatrix = mult(modelViewMatrix, mvMatrix);
-  gl.drawArrays(gl.LINES, 0, 180);
-  preorder(BODY_ID);
+
+  //gl.drawArrays(gl.TRIANGLES, 0, 180);
+
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+
+  // gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertexBuffer);
+  // var vPosition = gl.getAttribLocation(program, "vPosition");
+  // gl.vertexAttribPointer(
+  //   vPosition,
+  //   mesh.vertexBuffer.itemSize,
+  //   gl.FLOAT,
+  //   false,
+  //   0,
+  //   0
+  // );
+
+  // gl.enableVertexAttribArray(vPosition);
+  // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
+
+  // gl.drawElements(
+  //   gl.TRIANGLES,
+  //   mesh.indexBuffer.numItems,
+  //   gl.UNSIGNED_SHORT,
+  //   0
+  // );
+
+  modelViewMatrix = mult(modelViewMatrix, translate(0.6, -0.1, 0));
+  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, tailmesh.vertexBuffer);
+  var vPosition = gl.getAttribLocation(program, "vPosition");
+  gl.vertexAttribPointer(
+    vPosition,
+    tailmesh.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tailmesh.indexBuffer);
+
+  gl.drawElements(
+    gl.TRIANGLES,
+    tailmesh.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+
+  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
 
   requestAnimFrame(render);
 };

@@ -60,6 +60,21 @@ function quadTail1(a, b, c, d, colorIndex) {
   colorsArray.push(vertexColors[colorIndex]);
 }
 
+function quadTail2(a, b, c, d, colorIndex) {
+  indeces.push(tail2Vertexes[a]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail2Vertexes[b]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail2Vertexes[d]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail2Vertexes[b]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail2Vertexes[c]);
+  colorsArray.push(vertexColors[colorIndex]);
+  indeces.push(tail2Vertexes[d]);
+  colorsArray.push(vertexColors[colorIndex]);
+}
+
 // Each face determines two triangles
 var BODY_STARTING_VERTEX = 360;
 var BODY_QUAD_LENGTH = 30;
@@ -106,4 +121,15 @@ function tail1() {
   quadTail1(6, 4, 0, 2, 1);
   quadTail1(5, 7, 3, 1, 5);
   quadTail1(4, 5, 7, 6, 6);
+}
+
+var TAIL2_QUAD_LENGTH = 6;
+var TAIL2_VERTEX_LAST = TAIL1_VERTEX_LAST + TAIL2_QUAD_LENGTH * 6;
+function tail2() {
+  quadTail2(1, 7, 4, 3, 1);
+  quadTail2(5, 4, 3, 2, 4);
+  quadTail2(0, 6, 7, 1, 2);
+  quadTail2(0, 2, 5, 6, 3);
+  quadTail2(2, 3, 1, 0, 5);
+  quadTail2(7, 4, 5, 6, 5);
 }
