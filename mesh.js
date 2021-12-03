@@ -17,15 +17,15 @@ function constructCoordinateSystem() {
     indeces.push(vec3(i * 0.1, 0, 0));
     colorsArray.push(vertexColors[1]);
     indeces.push(vec3(-i * 0.1, 0, 0));
-    colorsArray.push(vertexColors[1]);
+    colorsArray.push(vertexColors[2]);
     indeces.push(vec3(0, i * 0.1, 0));
-    colorsArray.push(vertexColors[2]);
+    colorsArray.push(vertexColors[3]);
     indeces.push(vec3(0, -i * 0.1, 0));
-    colorsArray.push(vertexColors[2]);
+    colorsArray.push(vertexColors[4]);
     indeces.push(vec3(0, 0, i * 0.1));
-    colorsArray.push(vertexColors[3]);
+    colorsArray.push(vertexColors[5]);
     indeces.push(vec3(0, 0, -i * 0.1));
-    colorsArray.push(vertexColors[3]);
+    colorsArray.push(vertexColors[6]);
   }
 }
 
