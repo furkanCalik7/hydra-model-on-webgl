@@ -53,26 +53,24 @@ var MOUTH2_MESH;
 var MOUTH3_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
-const up = vec3(0.0, 1.0, 0.0);
+const up = vec3(1.0, 1.0, 0.0);
 
 // Tranformation Matrix variables
 var modelViewMatrix, projectionMatrix;
 var modelViewLoc, projectionLoc;
 var matrixStack = [];
 
-var sliderValue1 = 0;
-var sliderValue2 = 0;
-var sliderValue3 = 0;
-var sliderValue4 = 0;
+var slider_bodyX = 0;
+var slider_bodyY = 0;
+var slider_bodyZ = 0;
+var slider_bodyRY = 0;
 var sliderValue5 = 0;
 var sliderValue6 = 0;
 var sliderValue7 = 0;
 var sliderValue8 = 0;
 
 // The angles of joints
-var jointAngles = {
-  TAIL1_ID: 60,
-};
+var thetaAngle = [];
 
 // Mesh IDs
 var BODY_ID = 0;
@@ -136,8 +134,8 @@ function initHydraNodes(id) {
   var m = mat4();
   switch (id) {
     case BODY_ID:
-      m = mult(m, scale4(3, 3, 3));
-      m = mult(m, translate(-0.5, -0.5, 0));
+      m = mult(m, scale4(1.5, 3, 3));
+      m = mult(m, translate(-0.5, 0.35, 0));
       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
       var m = mat4();
       break;
@@ -314,6 +312,13 @@ function preorder(id) {
 var instanceMatrix;
 
 function bodyRender() {
+  instanceMatrix = rotate(60, 1, 0, 0);
+  instanceMatrix = mult(
+    instanceMatrix,
+    translate(slider_bodyX, slider_bodyY - 0.5, slider_bodyZ)
+  );
+  instanceMatrix = mult(instanceMatrix, rotate(slider_bodyRY, 0, 1, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, BODY_MESH.vertexBuffer);
   gl.vertexAttribPointer(
@@ -336,9 +341,9 @@ function bodyRender() {
 
 function tail1Render() {
   instanceMatrix = translate(-0.3, 0.075, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(0.3, -0.075, 0));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[TAIL1_ID], 0, 0, 1));
 
+  instanceMatrix = mult(instanceMatrix, translate(0.3, -0.075, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, TAIL1_MESH.vertexBuffer);
@@ -362,7 +367,7 @@ function tail1Render() {
 
 function tail2Render() {
   instanceMatrix = translate(-0.12, -0.02, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[TAIL2_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -387,7 +392,7 @@ function tail2Render() {
 
 function tail3Render() {
   instanceMatrix = translate(-0.1, -0.07, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[TAIL3_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.1, 0.07, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -412,7 +417,7 @@ function tail3Render() {
 
 function tail4Render() {
   instanceMatrix = translate(-0.07, -0.04, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[TAIL4_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.07, 0.04, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -438,7 +443,8 @@ function tail4Render() {
 function neck11Render() {
   instanceMatrix = translate(0.03, -0.08, 2);
   // Angle value
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK11_ID], 0, 0, 1));
+
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.08, -2));
 
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
@@ -465,7 +471,7 @@ function neck11Render() {
 function neck21Render() {
   instanceMatrix = translate(0.03, -0.08, 2);
   // Angle value
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK21_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.08, -2));
 
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
@@ -492,7 +498,7 @@ function neck21Render() {
 function neck31Render() {
   instanceMatrix = translate(0.03, -0.08, 2);
   // Angle value
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK31_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.08, -2));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -518,7 +524,7 @@ function neck31Render() {
 function neck12Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.1, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK12_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.1, 0));
   instanceMatrix = mult(instanceMatrix, scale4(0.7, 0.7, 0.7));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
@@ -545,7 +551,7 @@ function neck12Render() {
 function neck22Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.1, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK22_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.1, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -571,7 +577,7 @@ function neck22Render() {
 function neck32Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.1, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK32_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.1, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -597,7 +603,7 @@ function neck32Render() {
 function neck13Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.05, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK13_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.05, 0));
   instanceMatrix = mult(instanceMatrix, scale4(1.4, 1.4, 1.4));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
@@ -624,7 +630,7 @@ function neck13Render() {
 function neck23Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.05, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK23_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.05, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -650,7 +656,7 @@ function neck23Render() {
 function neck33Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.05, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK33_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.05, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -676,10 +682,7 @@ function neck33Render() {
 function neck14Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.027, -0.02, 0);
-  instanceMatrix = mult(
-    instanceMatrix,
-    rotate((sliderValue7 + 2) * 0, 0, 0, 1)
-  );
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK14_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.027, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -705,10 +708,7 @@ function neck14Render() {
 function neck24Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.027, -0.02, 0);
-  instanceMatrix = mult(
-    instanceMatrix,
-    rotate((sliderValue7 + 2) * 0, 0, 0, 1)
-  );
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK24_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.027, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -733,10 +733,7 @@ function neck24Render() {
 function neck34Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.027, -0.02, 0);
-  instanceMatrix = mult(
-    instanceMatrix,
-    rotate((sliderValue7 + 2) * 0, 0, 0, 1)
-  );
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK34_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.027, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -762,7 +759,7 @@ function neck34Render() {
 function neck15Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.01, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK15_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.01, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -788,7 +785,7 @@ function neck15Render() {
 function neck25Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.01, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK25_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.01, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -813,7 +810,7 @@ function neck25Render() {
 function neck35Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.05, -0.01, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK35_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.05, 0.01, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -980,7 +977,7 @@ function eye3Render() {
 function mouth1Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[MOUTH1_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -1005,7 +1002,7 @@ function mouth1Render() {
 function mouth2Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[MOUTH2_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -1030,7 +1027,7 @@ function mouth2Render() {
 function mouth3Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[MOUTH3_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -1083,7 +1080,6 @@ function meshInitilization() {
   MOUTH1_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH2_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH3_MESH = new OBJ.Mesh($("#mouth_data").html());
-  console.log(MOUTH1_MESH);
 
   OBJ.initMeshBuffers(gl, BODY_MESH);
   initHydraNodes(BODY_ID);
@@ -1147,8 +1143,8 @@ function meshInitilization() {
 
 window.onload = function init() {
   const canvas = document.createElement("canvas");
-  canvas.height = 800;
-  canvas.width = 800;
+  canvas.height = 1000;
+  canvas.width = 1000;
   $("#canvas-holder").append(canvas);
   $("#canvas-holder").css("cursor", "none");
   gl = canvas.getContext("webgl");
@@ -1220,8 +1216,7 @@ var render = function () {
     radius * Math.cos(phi)
   );
 
-  sliderInitilization();
-  mvMatrix = lookAt(eye, at, up);
+  mvMatrix = lookAt(eye, vec3(0, 0, 0), vec3(0, 1, 0));
   pMatrix = ortho(left, right, bottom, ytop, near, far);
 
   modelViewMatrix = mat4();
@@ -1229,7 +1224,7 @@ var render = function () {
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-
+  sliderInitilization();
   preorder(BODY_ID);
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
@@ -1239,37 +1234,56 @@ var render = function () {
 };
 
 function sliderInitilization() {
-  var slider1 = document.getElementById("slider1");
-  var output1 = document.getElementById("output1");
-  sliderValue1 = setValue(slider1, output1);
-  var slider2 = document.getElementById("slider2");
-  var output2 = document.getElementById("output2");
-  sliderValue2 = setValue(slider2, output2);
-  var slider3 = document.getElementById("slider3");
-  var output3 = document.getElementById("output3");
-  sliderValue3 = setValue(slider3, output3);
-  var slider4 = document.getElementById("slider4");
-  var output4 = document.getElementById("output4");
-  sliderValue4 = setValue(slider4, output4);
-  var slider5 = document.getElementById("slider5");
-  var output5 = document.getElementById("output5");
-  sliderValue5 = setValue(slider5, output5);
-  var slider6 = document.getElementById("slider6");
-  var output6 = document.getElementById("output6");
-  sliderValue6 = setValue(slider6, output6);
-  var slider7 = document.getElementById("slider7");
-  var output7 = document.getElementById("output7");
-  sliderValue7 = setValue(slider7, output7);
-  var slider8 = document.getElementById("slider8");
-  var output8 = document.getElementById("output8");
-  sliderValue8 = setValue(slider8, output8);
-}
-
-function setValue(slider, output) {
-  output.innerHTML = slider.value / 25 - 2;
-  slider.oninput = function () {
-    output.innerHTML = this.value / 25 - 2;
-    return output.innerHTML;
-  };
-  return output.innerHTML;
+  var slider1 = document.getElementById("slider_bodyX");
+  slider_bodyX = slider1.value;
+  var slider2 = document.getElementById("slider_bodyY");
+  slider_bodyY = slider2.value;
+  var slider3 = document.getElementById("slider_bodyZ");
+  slider_bodyZ = slider3.value;
+  var slider4 = document.getElementById("slider_bodyRY");
+  slider_bodyRY = slider4.value;
+  var slider5 = document.getElementById("tail1_theta");
+  thetaAngle[TAIL1_ID] = slider5.value;
+  var slider6 = document.getElementById("tail2_theta");
+  thetaAngle[TAIL2_ID] = slider6.value;
+  var slider7 = document.getElementById("tail3_theta");
+  thetaAngle[TAIL3_ID] = slider7.value;
+  var slider8 = document.getElementById("tail4_theta");
+  thetaAngle[TAIL4_ID] = slider8.value;
+  var slider9 = document.getElementById("neck1_theta");
+  thetaAngle[NECK11_ID] = slider9.value;
+  var slider10 = document.getElementById("neck12_theta");
+  thetaAngle[NECK12_ID] = slider10.value;
+  var slider10 = document.getElementById("neck13_theta");
+  thetaAngle[NECK13_ID] = slider10.value;
+  var slider10 = document.getElementById("neck14_theta");
+  thetaAngle[NECK14_ID] = slider10.value;
+  var slider10 = document.getElementById("neck15_theta");
+  thetaAngle[NECK15_ID] = slider10.value;
+  var slider10 = document.getElementById("mount1_theta");
+  thetaAngle[MOUTH1_ID] = slider10.value;
+  var slider10 = document.getElementById("neck2_theta");
+  thetaAngle[NECK21_ID] = slider10.value;
+  var slider10 = document.getElementById("neck22_theta");
+  thetaAngle[NECK22_ID] = slider10.value;
+  var slider10 = document.getElementById("neck23_theta");
+  thetaAngle[NECK23_ID] = slider10.value;
+  var slider10 = document.getElementById("neck24_theta");
+  thetaAngle[NECK24_ID] = slider10.value;
+  var slider10 = document.getElementById("neck25_theta");
+  thetaAngle[NECK25_ID] = slider10.value;
+  var slider10 = document.getElementById("mount2_theta");
+  thetaAngle[MOUTH2_ID] = slider10.value;
+  var slider10 = document.getElementById("neck3_theta");
+  thetaAngle[NECK31_ID] = slider10.value;
+  var slider10 = document.getElementById("neck32_theta");
+  thetaAngle[NECK32_ID] = slider10.value;
+  var slider10 = document.getElementById("neck33_theta");
+  thetaAngle[NECK33_ID] = slider10.value;
+  var slider10 = document.getElementById("neck34_theta");
+  thetaAngle[NECK34_ID] = slider10.value;
+  var slider10 = document.getElementById("neck35_theta");
+  thetaAngle[NECK35_ID] = slider10.value;
+  var slider10 = document.getElementById("mount3_theta");
+  thetaAngle[MOUTH3_ID] = slider10.value;
 }
