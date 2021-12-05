@@ -84,9 +84,7 @@ var sliderValue7 = 0;
 var sliderValue8 = 0;
 
 // The angles of joints
-var jointAngles = {
-  TAIL1_ID: 60,
-};
+var thetaAngle = [];
 
 // Mesh IDs
 var BODY_ID = 0;
@@ -321,7 +319,7 @@ function initHydraNodes(id) {
       var m = mat4();
       break;
     case LEG11_ID:
-      m = mult(m, translate(-0.20, -0.33, -0.08));
+      m = mult(m, translate(-0.20, -0.23, -0.08));
       m = hydraFigure[LEG11_ID] = createNode(m, leg11Render, LEG21_ID, LEG12_ID);
       var m = mat4();
       console.log(LEG11_ID);
@@ -379,18 +377,18 @@ function initHydraNodes(id) {
       var m = mat4();
       console.log(LEG23_ID);
     case LEG33_ID:
-      m = mult(m, translate(0.05, -0.114, -0.020));
+      m = mult(m, translate(0.05, -0.084, -0.020));
       m = hydraFigure[LEG33_ID] = createNode(m, leg33Render, null, LEG34_ID);
       var m = mat4();
       console.log(LEG33_ID);
       break;
     case LEG43_ID:
-      m = mult(m, translate(0.05, -0.114, 0.0));
+      m = mult(m, translate(0.05, -0.084, 0.0));
       m = hydraFigure[LEG43_ID] = createNode(m, leg43Render, null, LEG44_ID);
       var m = mat4();
       console.log(LEG43_ID);
     case LEG34_ID:
-      m = mult(m, translate(-0.2, -0.094, 0.075));
+      m = mult(m, translate(-0.2, -0.084, 0.075));
       m = hydraFigure[LEG34_ID] = createNode(m, leg34Render, null, null);
       var m = mat4();
       console.log(LEG34_ID);
@@ -1162,9 +1160,9 @@ function mouth3Render() {
 
   function leg11Render() {
     instanceMatrix = mat4();
-    instanceMatrix = translate(0.03, -0.005, 0);
-    instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-    instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+    instanceMatrix = translate(0.03, 0.175, 0);
+    instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG11_ID] , 0, 0, 1));
+    instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0))
     modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
     gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
     gl.bindBuffer(gl.ARRAY_BUFFER, LEG11_MESH.vertexBuffer);
@@ -1187,9 +1185,9 @@ function mouth3Render() {
 }
 function leg21Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG21_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG21_MESH.vertexBuffer);
@@ -1213,9 +1211,9 @@ function leg21Render() {
 
 function leg31Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG31_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG31_MESH.vertexBuffer);
@@ -1239,9 +1237,9 @@ function leg31Render() {
 
 function leg41Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG41_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG41_MESH.vertexBuffer);
@@ -1264,9 +1262,9 @@ function leg41Render() {
 }
 function leg12Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(0.03, 0.065, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG12_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.065, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG12_MESH.vertexBuffer);
@@ -1289,9 +1287,9 @@ function leg12Render() {
 }
 function leg22Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(0.03, 0.065, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG22_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.065, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG22_MESH.vertexBuffer);
@@ -1315,9 +1313,9 @@ function leg22Render() {
 
 function leg32Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(-0.23, 0.035, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG32_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.23, -0.035, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG32_MESH.vertexBuffer);
@@ -1340,9 +1338,9 @@ function leg32Render() {
 }
 function leg42Render() {
   instanceMatrix = mat4();
-  instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
-  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  instanceMatrix = translate(-0.23, 0.035, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG42_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.23, -0.035, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, LEG42_MESH.vertexBuffer);
@@ -1416,7 +1414,7 @@ function leg23Render() {
 function leg33Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG33_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -1441,7 +1439,7 @@ function leg33Render() {
 function leg43Render() {
   instanceMatrix = mat4();
   instanceMatrix = translate(0.03, -0.005, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG43_ID], 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -1749,28 +1747,44 @@ var render = function () {
 function sliderInitilization() {
   var slider1 = document.getElementById("slider1");
   var output1 = document.getElementById("output1");
+  thetaAngle[LEG11_ID] = document.getElementById("slider1").value;
   sliderValue1 = setValue(slider1, output1);
   var slider2 = document.getElementById("slider2");
   var output2 = document.getElementById("output2");
+  thetaAngle[LEG12_ID] = document.getElementById("slider2").value;
   sliderValue2 = setValue(slider2, output2);
   var slider3 = document.getElementById("slider3");
   var output3 = document.getElementById("output3");
+  thetaAngle[LEG21_ID] = document.getElementById("slider3").value;
   sliderValue3 = setValue(slider3, output3);
   var slider4 = document.getElementById("slider4");
   var output4 = document.getElementById("output4");
+  thetaAngle[LEG22_ID] = document.getElementById("slider4").value;
   sliderValue4 = setValue(slider4, output4);
   var slider5 = document.getElementById("slider5");
   var output5 = document.getElementById("output5");
+  thetaAngle[LEG31_ID] = document.getElementById("slider5").value;
   sliderValue5 = setValue(slider5, output5);
   var slider6 = document.getElementById("slider6");
   var output6 = document.getElementById("output6");
+  thetaAngle[LEG32_ID] = document.getElementById("slider6").value;
   sliderValue6 = setValue(slider6, output6);
   var slider7 = document.getElementById("slider7");
   var output7 = document.getElementById("output7");
+  thetaAngle[LEG33_ID] = document.getElementById("slider7").value;
   sliderValue7 = setValue(slider7, output7);
   var slider8 = document.getElementById("slider8");
   var output8 = document.getElementById("output8");
+  thetaAngle[LEG41_ID] = document.getElementById("slider8").value;
   sliderValue8 = setValue(slider8, output8);
+  var slider9 = document.getElementById("slider9");
+  var output9 = document.getElementById("output9");
+  thetaAngle[LEG42_ID] = document.getElementById("slider9").value;
+  sliderValue9 = setValue(slider9, output9);
+  var slider10 = document.getElementById("slider10");
+  var output10 = document.getElementById("output10");
+  thetaAngle[LEG43_ID] = document.getElementById("slider10").value;
+  sliderValue10 = setValue(slider10, output10);
 }
 
 function setValue(slider, output) {
