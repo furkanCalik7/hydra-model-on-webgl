@@ -51,6 +51,20 @@ var EYE3_MESH;
 var MOUTH1_MESH;
 var MOUTH2_MESH;
 var MOUTH3_MESH;
+var LEG11_MESH;
+var LEG12_MESH;
+var LEG13_MESH;
+var LEG21_MESH;
+var LEG22_MESH;
+var LEG23_MESH;
+var LEG31_MESH;
+var LEG32_MESH;
+var LEG33_MESH;
+var LEG34_MESH;
+var LEG41_MESH;
+var LEG42_MESH;
+var LEG43_MESH;
+var LEG44_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -104,6 +118,20 @@ var EYE3_ID = 25;
 var MOUTH1_ID = 26;
 var MOUTH2_ID = 27;
 var MOUTH3_ID = 28;
+var LEG11_ID = 29;
+var LEG12_ID = 30;
+var LEG13_ID = 31;
+var LEG21_ID = 32;
+var LEG22_ID = 33;
+var LEG23_ID = 34;
+var LEG31_ID = 35;
+var LEG32_ID = 36;
+var LEG33_ID = 37;
+var LEG34_ID = 38;
+var LEG41_ID = 39;
+var LEG42_ID = 40;
+var LEG43_ID = 41;
+var LEG44_ID = 42;
 
 // Hydra nodes array
 var numOfNodes = 2;
@@ -137,7 +165,7 @@ function initHydraNodes(id) {
   switch (id) {
     case BODY_ID:
       m = mult(m, scale4(3, 3, 3));
-      m = mult(m, translate(-0.5, -0.5, 0));
+      m = mult(m, translate(-0.5, 0.35, 0));
       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
       var m = mat4();
       break;
@@ -184,7 +212,7 @@ function initHydraNodes(id) {
       break;
     case NECK31_ID:
       m = translate(-0.38, 0.35, -0.095);
-      m = hydraFigure[NECK31_ID] = createNode(m, neck31Render, null, NECK32_ID);
+      m = hydraFigure[NECK31_ID] = createNode(m, neck31Render, LEG11_ID, NECK32_ID);
       var m = mat4();
       break;
     case NECK12_ID:
@@ -292,6 +320,85 @@ function initHydraNodes(id) {
       m = hydraFigure[MOUTH3_ID] = createNode(m, mouth3Render, null, null);
       var m = mat4();
       break;
+    case LEG11_ID:
+      m = mult(m, translate(-0.20, -0.33, -0.08));
+      m = hydraFigure[LEG11_ID] = createNode(m, leg11Render, LEG21_ID, LEG12_ID);
+      var m = mat4();
+      console.log(LEG11_ID);
+      break;
+    case LEG21_ID:
+      m = mult(m, translate(-0.20, -0.33, 0.08));
+      m = hydraFigure[LEG21_ID] = createNode(m, leg21Render, LEG31_ID, LEG22_ID);
+      var m = mat4();
+      console.log(LEG21_ID);
+      break;
+    case LEG31_ID:
+      m = mult(m, translate(0.32, -0.27, 0.105));
+      m = hydraFigure[LEG31_ID] = createNode(m, leg31Render, LEG41_ID, LEG32_ID);        
+      var m = mat4();
+      console.log(LEG31_ID);
+      break;
+    
+    case LEG41_ID:
+      m = mult(m, translate(0.32, -0.27, -0.11));
+      m = hydraFigure[LEG41_ID] = createNode(m, leg41Render, null, LEG42_ID);        
+      var m = mat4();
+      console.log(LEG41_ID);
+      break;
+    case LEG12_ID:
+      m = mult(m, translate(-0.11, -0.14, -0.04));
+      m = hydraFigure[LEG12_ID] = createNode(m, leg12Render, null, LEG13_ID);
+      var m = mat4();
+      console.log(LEG12_ID);
+      break;
+    case LEG22_ID:
+      m = mult(m, translate(-0.11, -0.14, 0.04));
+      m = hydraFigure[LEG22_ID] = createNode(m, leg22Render, null, LEG23_ID);
+      var m = mat4();
+      console.log(LEG22_ID);
+      break;
+    case LEG32_ID:
+      m = mult(m, translate(0.1, -0.124, -0.043));
+      m = hydraFigure[LEG32_ID] = createNode(m, leg32Render, null, LEG33_ID);
+      var m = mat4();
+      console.log(LEG32_ID);
+      break;
+    case LEG42_ID:
+      m = mult(m, translate(0.1, -0.124, 0.01));
+      m = hydraFigure[LEG42_ID] = createNode(m, leg42Render, null, LEG43_ID);
+      var m = mat4();
+      console.log(LEG42_ID);
+    case LEG13_ID:
+      m = mult(m, translate(-0.12, -0.04, -0.04));
+      m = hydraFigure[LEG13_ID] = createNode(m, leg13Render, null, null);
+      var m = mat4();
+      console.log(LEG13_ID);
+    case LEG23_ID:
+      m = mult(m, translate(-0.12, -0.04, 0.04));
+      m = hydraFigure[LEG23_ID] = createNode(m, leg23Render, null, null);
+      var m = mat4();
+      console.log(LEG23_ID);
+    case LEG33_ID:
+      m = mult(m, translate(0.05, -0.114, -0.020));
+      m = hydraFigure[LEG33_ID] = createNode(m, leg33Render, null, LEG34_ID);
+      var m = mat4();
+      console.log(LEG33_ID);
+      break;
+    case LEG43_ID:
+      m = mult(m, translate(0.05, -0.114, 0.0));
+      m = hydraFigure[LEG43_ID] = createNode(m, leg43Render, null, LEG44_ID);
+      var m = mat4();
+      console.log(LEG43_ID);
+    case LEG34_ID:
+      m = mult(m, translate(-0.2, -0.094, 0.075));
+      m = hydraFigure[LEG34_ID] = createNode(m, leg34Render, null, null);
+      var m = mat4();
+      console.log(LEG34_ID);
+    case LEG44_ID:
+      m = mult(m, translate(-0.2, -0.094, -0.015));
+      m = hydraFigure[LEG44_ID] = createNode(m, leg44Render, null, null);
+      var m = mat4();
+      console.log(LEG44_ID);
   }
 }
 
@@ -1051,14 +1158,369 @@ function mouth3Render() {
     gl.UNSIGNED_SHORT,
     0
   );
+  }
+
+  function leg11Render() {
+    instanceMatrix = mat4();
+    instanceMatrix = translate(0.03, -0.005, 0);
+    instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+    instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+    modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+    gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+    gl.bindBuffer(gl.ARRAY_BUFFER, LEG11_MESH.vertexBuffer);
+    gl.vertexAttribPointer(
+      vPosition,
+      LEG11_MESH.vertexBuffer.itemSize,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+    gl.enableVertexAttribArray(vPosition);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG11_MESH.indexBuffer);
+    gl.drawElements(
+      gl.TRIANGLES,
+      LEG11_MESH.indexBuffer.numItems,
+      gl.UNSIGNED_SHORT,
+      0
+    );
+}
+function leg21Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG21_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG21_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG21_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG21_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
 }
 
+function leg31Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG31_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG31_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG31_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG31_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function leg41Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG41_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG41_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG41_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG41_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg12Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG12_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG12_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG12_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG12_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg22Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG22_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG22_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG22_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG22_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function leg32Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG32_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG32_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG32_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG32_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg42Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG42_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG42_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG42_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG42_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg13Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG13_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG13_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG13_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG13_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg23Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG23_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG23_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG23_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG23_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg33Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG33_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG33_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG33_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG33_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg43Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG43_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG43_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG43_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG43_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg34Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG34_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG34_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG34_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG34_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg44Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG44_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG44_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG44_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG44_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
 function meshInitilization() {
   BODY_MESH = new OBJ.Mesh($("#body_data").html());
+
   TAIL1_MESH = new OBJ.Mesh($("#tail1_data").html());
   TAIL2_MESH = new OBJ.Mesh($("#tail2_data").html());
   TAIL3_MESH = new OBJ.Mesh($("#tail3_data").html());
   TAIL4_MESH = new OBJ.Mesh($("#tail4_data").html());
+
   NECK11_MESH = new OBJ.Mesh($("#neck1_data").html());
   NECK21_MESH = new OBJ.Mesh($("#neck1_data").html());
   NECK31_MESH = new OBJ.Mesh($("#neck1_data").html());
@@ -1074,16 +1536,33 @@ function meshInitilization() {
   NECK15_MESH = new OBJ.Mesh($("#neck5_data").html());
   NECK25_MESH = new OBJ.Mesh($("#neck5_data").html());
   NECK35_MESH = new OBJ.Mesh($("#neck5_data").html());
+
   HEAD1_MESH = new OBJ.Mesh($("#head1_data").html());
   HEAD2_MESH = new OBJ.Mesh($("#head1_data").html());
   HEAD3_MESH = new OBJ.Mesh($("#head1_data").html());
+
   EYE1_MESH = new OBJ.Mesh($("#eye_data").html());
   EYE2_MESH = new OBJ.Mesh($("#eye_data").html());
   EYE3_MESH = new OBJ.Mesh($("#eye_data").html());
+
   MOUTH1_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH2_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH3_MESH = new OBJ.Mesh($("#mouth_data").html());
-  console.log(MOUTH1_MESH);
+
+  LEG11_MESH = new OBJ.Mesh($("#leg1_1_data").html());
+  LEG12_MESH = new OBJ.Mesh($("#leg1_2_data").html()); 
+  LEG13_MESH = new OBJ.Mesh($("#leg1_3_data").html());
+  LEG21_MESH = new OBJ.Mesh($("#leg2_1_data").html());
+  LEG22_MESH = new OBJ.Mesh($("#leg2_2_data").html());
+  LEG23_MESH = new OBJ.Mesh($("#leg2_3_data").html());
+  LEG31_MESH = new OBJ.Mesh($("#leg3_1_data").html());
+  LEG32_MESH = new OBJ.Mesh($("#leg3_2_data").html());
+  LEG33_MESH = new OBJ.Mesh($("#leg3_3_data").html());
+  LEG34_MESH = new OBJ.Mesh($("#leg3_4_data").html());
+  LEG41_MESH = new OBJ.Mesh($("#leg4_1_data").html());
+  LEG42_MESH = new OBJ.Mesh($("#leg4_2_data").html());
+  LEG43_MESH = new OBJ.Mesh($("#leg4_3_data").html());
+  LEG44_MESH = new OBJ.Mesh($("#leg4_4_data").html());
 
   OBJ.initMeshBuffers(gl, BODY_MESH);
   initHydraNodes(BODY_ID);
@@ -1143,6 +1622,35 @@ function meshInitilization() {
   initHydraNodes(MOUTH2_ID);
   OBJ.initMeshBuffers(gl, MOUTH3_MESH);
   initHydraNodes(MOUTH3_ID);
+  
+  OBJ.initMeshBuffers(gl, LEG11_MESH);
+  initHydraNodes(LEG11_ID);
+  OBJ.initMeshBuffers(gl, LEG12_MESH);
+  initHydraNodes(LEG12_ID);
+  OBJ.initMeshBuffers(gl, LEG13_MESH);
+  initHydraNodes(LEG13_ID);
+  OBJ.initMeshBuffers(gl, LEG21_MESH);
+  initHydraNodes(LEG21_ID);
+  OBJ.initMeshBuffers(gl, LEG22_MESH);
+  initHydraNodes(LEG22_ID);
+  OBJ.initMeshBuffers(gl, LEG23_MESH);
+  initHydraNodes(LEG23_ID);
+  OBJ.initMeshBuffers(gl, LEG31_MESH);
+  initHydraNodes(LEG31_ID);
+  OBJ.initMeshBuffers(gl, LEG32_MESH);
+  initHydraNodes(LEG32_ID);
+  OBJ.initMeshBuffers(gl, LEG33_MESH);
+  initHydraNodes(LEG33_ID);
+  OBJ.initMeshBuffers(gl, LEG34_MESH);
+  initHydraNodes(LEG34_ID);
+  OBJ.initMeshBuffers(gl, LEG41_MESH);
+  initHydraNodes(LEG41_ID);
+  OBJ.initMeshBuffers(gl, LEG42_MESH);
+  initHydraNodes(LEG42_ID);
+  OBJ.initMeshBuffers(gl, LEG43_MESH);
+  initHydraNodes(LEG43_ID);
+  OBJ.initMeshBuffers(gl, LEG44_MESH);
+  initHydraNodes(LEG44_ID);
 }
 
 window.onload = function init() {
