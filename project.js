@@ -13,13 +13,10 @@ var near = -4;
 var far = 4;
 var radius = 1.0;
 
-var X_DIRECTION = {
-  theta: -901.6597,
-  phi: 93701.16192,
-};
 
-var theta = X_DIRECTION.theta;
-var phi = X_DIRECTION.phi;
+
+var theta = -0.872664625997;
+var phi = 1.570796326794896;
 var dr = (5.0 * Math.PI) / 180.0;
 
 var left = -4.0;
@@ -74,7 +71,7 @@ var LEG43_MESH;
 var LEG44_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
-const up = vec3(1.0, 1.0, 0.0);
+const up = vec3(0.0, 1.0, 0.0);
 
 // Tranformation Matrix variables
 var modelViewMatrix, projectionMatrix;
@@ -1769,15 +1766,19 @@ window.onload = function init() {
   };
   document.getElementById("Button5").onclick = function () {
     theta += dr * 2;
+    console.log(theta);
   };
   document.getElementById("Button6").onclick = function () {
     theta -= dr * 2;
+    console.log(theta);
   };
   document.getElementById("Button7").onclick = function () {
     phi += dr;
+    console.log("phi: " + phi);
   };
   document.getElementById("Button8").onclick = function () {
     phi -= dr;
+    console.log("phi: " + phi);
   };
 
   render();
@@ -1786,13 +1787,10 @@ window.onload = function init() {
 var render = function () {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  eye = vec3(
-    radius * Math.sin(phi),
-    radius * Math.sin(theta),
-    radius * Math.cos(phi)
-  );
+  eye = vec3(radius*Math.sin(theta)*Math.cos(phi), 
+        radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
 
-  mvMatrix = lookAt(eye, vec3(0, 0, 0), vec3(0, 1, 0));
+  mvMatrix = lookAt(eye, at, up);
   pMatrix = ortho(left, right, bottom, ytop, near, far);
 
   modelViewMatrix = mat4();
@@ -1889,6 +1887,17 @@ function sliderInitilization() {
   thetaAngle[LEG42_ID] = slider10.value;
   var slider10 = document.getElementById("leg43_theta");
   thetaAngle[LEG43_ID] = slider10.value;
+
+  slider10 = document.getElementById("theta");
+  theta = slider10.value;
+  slider10 = document.getElementById("phi");
+  phi = slider10.value;
+
+  // slider10 = document.getElementById("z");
+  // near = slider10.value;
+  // far = slider10.value;
+  // slider10 = document.getElementById("r");
+  // radius = slider10.value;
 }
 
 // Animation functions
@@ -1997,6 +2006,9 @@ function playAnimation() {
       slider10.value = frameArray[frameCounter][LEG42_ID + 4];
       var slider10 = document.getElementById("leg43_theta");
       slider10.value = frameArray[frameCounter][LEG43_ID + 4];
+
+      
+
       console.log(frameCounter);
       frameCounter++;
     }
