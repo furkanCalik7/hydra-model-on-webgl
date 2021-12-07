@@ -2,6 +2,13 @@ var canvas;
 var gl;
 var vPosition;
 
+// Animation variables
+var frameArray = []; // Holds the thetas at each frames
+var lastIndexFrame = 0;
+var lastFrameJSON;
+var frameJSON;
+var intervalID;
+
 var near = -4;
 var far = 4;
 var radius = 1.0;
@@ -51,6 +58,20 @@ var EYE3_MESH;
 var MOUTH1_MESH;
 var MOUTH2_MESH;
 var MOUTH3_MESH;
+var LEG11_MESH;
+var LEG12_MESH;
+var LEG13_MESH;
+var LEG21_MESH;
+var LEG22_MESH;
+var LEG23_MESH;
+var LEG31_MESH;
+var LEG32_MESH;
+var LEG33_MESH;
+var LEG34_MESH;
+var LEG41_MESH;
+var LEG42_MESH;
+var LEG43_MESH;
+var LEG44_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(1.0, 1.0, 0.0);
@@ -64,10 +85,6 @@ var slider_bodyX = 0;
 var slider_bodyY = 0;
 var slider_bodyZ = 0;
 var slider_bodyRY = 0;
-var sliderValue5 = 0;
-var sliderValue6 = 0;
-var sliderValue7 = 0;
-var sliderValue8 = 0;
 
 // The angles of joints
 var thetaAngle = [];
@@ -102,6 +119,20 @@ var EYE3_ID = 25;
 var MOUTH1_ID = 26;
 var MOUTH2_ID = 27;
 var MOUTH3_ID = 28;
+var LEG11_ID = 29;
+var LEG12_ID = 30;
+var LEG13_ID = 31;
+var LEG21_ID = 32;
+var LEG22_ID = 33;
+var LEG23_ID = 34;
+var LEG31_ID = 35;
+var LEG32_ID = 36;
+var LEG33_ID = 37;
+var LEG34_ID = 38;
+var LEG41_ID = 39;
+var LEG42_ID = 40;
+var LEG43_ID = 41;
+var LEG44_ID = 42;
 
 // Hydra nodes array
 var numOfNodes = 2;
@@ -182,7 +213,12 @@ function initHydraNodes(id) {
       break;
     case NECK31_ID:
       m = translate(-0.38, 0.35, -0.095);
-      m = hydraFigure[NECK31_ID] = createNode(m, neck31Render, null, NECK32_ID);
+      m = hydraFigure[NECK31_ID] = createNode(
+        m,
+        neck31Render,
+        LEG11_ID,
+        NECK32_ID
+      );
       var m = mat4();
       break;
     case NECK12_ID:
@@ -288,6 +324,99 @@ function initHydraNodes(id) {
     case MOUTH3_ID:
       m = mult(m, translate(-0.08, -0.03, 0.004));
       m = hydraFigure[MOUTH3_ID] = createNode(m, mouth3Render, null, null);
+      var m = mat4();
+      break;
+    case LEG11_ID:
+      m = mult(m, translate(-0.2, -0.23, -0.08));
+      m = hydraFigure[LEG11_ID] = createNode(
+        m,
+        leg11Render,
+        LEG21_ID,
+        LEG12_ID
+      );
+      var m = mat4();
+      console.log(LEG11_ID);
+      break;
+    case LEG21_ID:
+      m = mult(m, translate(-0.2, -0.33, 0.08));
+      m = hydraFigure[LEG21_ID] = createNode(
+        m,
+        leg21Render,
+        LEG31_ID,
+        LEG22_ID
+      );
+      var m = mat4();
+      console.log(LEG21_ID);
+      break;
+    case LEG31_ID:
+      m = mult(m, translate(0.32, -0.27, 0.105));
+      m = hydraFigure[LEG31_ID] = createNode(
+        m,
+        leg31Render,
+        LEG41_ID,
+        LEG32_ID
+      );
+      var m = mat4();
+      console.log(LEG31_ID);
+      break;
+
+    case LEG41_ID:
+      m = mult(m, translate(0.32, -0.27, -0.11));
+      m = hydraFigure[LEG41_ID] = createNode(m, leg41Render, null, LEG42_ID);
+      var m = mat4();
+      console.log(LEG41_ID);
+      break;
+    case LEG12_ID:
+      m = mult(m, translate(-0.11, -0.14, -0.04));
+      m = hydraFigure[LEG12_ID] = createNode(m, leg12Render, null, LEG13_ID);
+      var m = mat4();
+      console.log(LEG12_ID);
+      break;
+    case LEG22_ID:
+      m = mult(m, translate(-0.11, -0.14, 0.04));
+      m = hydraFigure[LEG22_ID] = createNode(m, leg22Render, null, LEG23_ID);
+      var m = mat4();
+      console.log(LEG22_ID);
+      break;
+    case LEG32_ID:
+      m = mult(m, translate(0.1, -0.124, -0.043));
+      m = hydraFigure[LEG32_ID] = createNode(m, leg32Render, null, LEG33_ID);
+      var m = mat4();
+      console.log(LEG32_ID);
+      break;
+    case LEG42_ID:
+      m = mult(m, translate(0.1, -0.124, 0.01));
+      m = hydraFigure[LEG42_ID] = createNode(m, leg42Render, null, LEG43_ID);
+      var m = mat4();
+      break;
+    case LEG13_ID:
+      m = mult(m, translate(-0.12, -0.04, -0.04));
+      m = hydraFigure[LEG13_ID] = createNode(m, leg13Render, null, null);
+      var m = mat4();
+      break;
+    case LEG23_ID:
+      m = mult(m, translate(-0.12, -0.04, 0.04));
+      m = hydraFigure[LEG23_ID] = createNode(m, leg23Render, null, null);
+      var m = mat4();
+      break;
+    case LEG33_ID:
+      m = mult(m, translate(0.05, -0.084, -0.02));
+      m = hydraFigure[LEG33_ID] = createNode(m, leg33Render, null, LEG34_ID);
+      var m = mat4();
+      break;
+    case LEG43_ID:
+      m = mult(m, translate(0.05, -0.084, 0.0));
+      m = hydraFigure[LEG43_ID] = createNode(m, leg43Render, null, LEG44_ID);
+      var m = mat4();
+      break;
+    case LEG34_ID:
+      m = mult(m, translate(-0.2, -0.084, 0.075));
+      m = hydraFigure[LEG34_ID] = createNode(m, leg34Render, null, null);
+      var m = mat4();
+      break;
+    case LEG44_ID:
+      m = mult(m, translate(-0.2, -0.094, -0.015));
+      m = hydraFigure[LEG44_ID] = createNode(m, leg44Render, null, null);
       var m = mat4();
       break;
   }
@@ -1049,6 +1178,359 @@ function mouth3Render() {
     0
   );
 }
+function leg11Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG11_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG11_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG11_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG11_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG11_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg21Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG21_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG21_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG21_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG21_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG21_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function leg31Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG31_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG31_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG31_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG31_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG31_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function leg41Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.175, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG41_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.175, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG41_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG41_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG41_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG41_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg12Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.065, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG12_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.065, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG12_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG12_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG12_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG12_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg22Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, 0.065, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG22_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, -0.065, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG22_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG22_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG22_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG22_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+
+function leg32Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(-0.23, 0.035, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG32_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.23, -0.035, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG32_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG32_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG32_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG32_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg42Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(-0.23, 0.035, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[LEG42_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.23, -0.035, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG42_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG42_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG42_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG42_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg13Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG13_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG13_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG13_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG13_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg23Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG23_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG23_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG23_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG23_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg33Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG33_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG33_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG33_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG33_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG33_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg43Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(-thetaAngle[LEG43_ID], 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG43_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG43_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG43_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG43_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg34Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG34_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG34_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG34_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG34_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
+function leg44Render() {
+  instanceMatrix = mat4();
+  instanceMatrix = translate(0.03, -0.005, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.005, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG44_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    LEG44_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG44_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    LEG44_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
 
 function meshInitilization() {
   BODY_MESH = new OBJ.Mesh($("#body_data").html());
@@ -1080,6 +1562,21 @@ function meshInitilization() {
   MOUTH1_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH2_MESH = new OBJ.Mesh($("#mouth_data").html());
   MOUTH3_MESH = new OBJ.Mesh($("#mouth_data").html());
+
+  LEG11_MESH = new OBJ.Mesh($("#leg1_1_data").html());
+  LEG12_MESH = new OBJ.Mesh($("#leg1_2_data").html());
+  LEG13_MESH = new OBJ.Mesh($("#leg1_3_data").html());
+  LEG21_MESH = new OBJ.Mesh($("#leg2_1_data").html());
+  LEG22_MESH = new OBJ.Mesh($("#leg2_2_data").html());
+  LEG23_MESH = new OBJ.Mesh($("#leg2_3_data").html());
+  LEG31_MESH = new OBJ.Mesh($("#leg3_1_data").html());
+  LEG32_MESH = new OBJ.Mesh($("#leg3_2_data").html());
+  LEG33_MESH = new OBJ.Mesh($("#leg3_3_data").html());
+  LEG34_MESH = new OBJ.Mesh($("#leg3_4_data").html());
+  LEG41_MESH = new OBJ.Mesh($("#leg4_1_data").html());
+  LEG42_MESH = new OBJ.Mesh($("#leg4_2_data").html());
+  LEG43_MESH = new OBJ.Mesh($("#leg4_3_data").html());
+  LEG44_MESH = new OBJ.Mesh($("#leg4_4_data").html());
 
   OBJ.initMeshBuffers(gl, BODY_MESH);
   initHydraNodes(BODY_ID);
@@ -1139,6 +1636,35 @@ function meshInitilization() {
   initHydraNodes(MOUTH2_ID);
   OBJ.initMeshBuffers(gl, MOUTH3_MESH);
   initHydraNodes(MOUTH3_ID);
+
+  OBJ.initMeshBuffers(gl, LEG11_MESH);
+  initHydraNodes(LEG11_ID);
+  OBJ.initMeshBuffers(gl, LEG12_MESH);
+  initHydraNodes(LEG12_ID);
+  OBJ.initMeshBuffers(gl, LEG13_MESH);
+  initHydraNodes(LEG13_ID);
+  OBJ.initMeshBuffers(gl, LEG21_MESH);
+  initHydraNodes(LEG21_ID);
+  OBJ.initMeshBuffers(gl, LEG22_MESH);
+  initHydraNodes(LEG22_ID);
+  OBJ.initMeshBuffers(gl, LEG23_MESH);
+  initHydraNodes(LEG23_ID);
+  OBJ.initMeshBuffers(gl, LEG31_MESH);
+  initHydraNodes(LEG31_ID);
+  OBJ.initMeshBuffers(gl, LEG32_MESH);
+  initHydraNodes(LEG32_ID);
+  OBJ.initMeshBuffers(gl, LEG33_MESH);
+  initHydraNodes(LEG33_ID);
+  OBJ.initMeshBuffers(gl, LEG34_MESH);
+  initHydraNodes(LEG34_ID);
+  OBJ.initMeshBuffers(gl, LEG41_MESH);
+  initHydraNodes(LEG41_ID);
+  OBJ.initMeshBuffers(gl, LEG42_MESH);
+  initHydraNodes(LEG42_ID);
+  OBJ.initMeshBuffers(gl, LEG43_MESH);
+  initHydraNodes(LEG43_ID);
+  OBJ.initMeshBuffers(gl, LEG44_MESH);
+  initHydraNodes(LEG44_ID);
 }
 
 window.onload = function init() {
@@ -1151,6 +1677,56 @@ window.onload = function init() {
   if (!gl) {
     alert("WebGL isn't available");
   }
+
+  frameJSON = {
+    slider_bodyX: slider_bodyX,
+    slider_bodyY: slider_bodyY,
+    slider_bodyZ: slider_bodyZ,
+    slider_bodyRY: slider_bodyRY,
+    thetaAngle: thetaAngle,
+  };
+
+  $("#run_anim").click(() => {
+    intervalID = setInterval(playAnimation, 100);
+  });
+
+  $("#save-button").click(() => {
+    var data = {
+      array: frameArray,
+    };
+
+    var json = JSON.stringify(data);
+
+    json = [json];
+    var blob1 = new Blob(json, { type: ".json" });
+
+    var isIE = false || !!document.documentMode;
+    if (isIE) {
+      window.navigator.msSaveBlob(blob1, "data.json");
+    } else {
+      var url = window.URL || window.webkitURL;
+      link = url.createObjectURL(blob1);
+      var a = document.createElement("a");
+      a.download = "data.json";
+      a.href = link;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  });
+
+  var frameCounterButton = $("#frame_counter_btn");
+  var initialFrameButton = $("#initial_frame_btn");
+  frameCounterButton.click(() => {
+    AddFrame();
+  });
+  initialFrameButton.click(() => {
+    addInitialFrame();
+  });
+
+  $("#load_anim_btn").click(() => {
+    loadAnim();
+  });
 
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -1229,6 +1805,13 @@ var render = function () {
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  frameJSON = {
+    slider_bodyX: slider_bodyX,
+    slider_bodyY: slider_bodyY,
+    slider_bodyZ: slider_bodyZ,
+    slider_bodyRY: slider_bodyRY,
+    thetaAngle: thetaAngle,
+  };
 
   requestAnimFrame(render);
 };
@@ -1286,4 +1869,199 @@ function sliderInitilization() {
   thetaAngle[NECK35_ID] = slider10.value;
   var slider10 = document.getElementById("mount3_theta");
   thetaAngle[MOUTH3_ID] = slider10.value;
+  var slider10 = document.getElementById("leg11_theta");
+  thetaAngle[LEG11_ID] = slider10.value;
+  var slider10 = document.getElementById("leg12_theta");
+  thetaAngle[LEG12_ID] = slider10.value;
+  var slider10 = document.getElementById("leg21_theta");
+  thetaAngle[LEG21_ID] = slider10.value;
+  var slider10 = document.getElementById("leg22_theta");
+  thetaAngle[LEG22_ID] = slider10.value;
+  var slider10 = document.getElementById("leg31_theta");
+  thetaAngle[LEG31_ID] = slider10.value;
+  var slider10 = document.getElementById("leg32_theta");
+  thetaAngle[LEG32_ID] = slider10.value;
+  var slider10 = document.getElementById("leg33_theta");
+  thetaAngle[LEG33_ID] = slider10.value;
+  var slider10 = document.getElementById("leg41_theta");
+  thetaAngle[LEG41_ID] = slider10.value;
+  var slider10 = document.getElementById("leg42_theta");
+  thetaAngle[LEG42_ID] = slider10.value;
+  var slider10 = document.getElementById("leg43_theta");
+  thetaAngle[LEG43_ID] = slider10.value;
 }
+
+// Animation functions
+var frameCounter = 0;
+function playAnimation() {
+  if (frameArray.length != 0) {
+    if (frameCounter == frameArray.length) {
+      frameCounter = 0;
+      clearInterval(intervalID);
+    } else {
+      var slider1 = document.getElementById("slider_bodyX");
+      slider1.value = frameArray[frameCounter][0];
+      var slider2 = document.getElementById("slider_bodyY");
+      slider2.value = frameArray[frameCounter][1];
+      var slider3 = document.getElementById("slider_bodyZ");
+      slider3.value = frameArray[frameCounter][2];
+      var slider4 = document.getElementById("slider_bodyRY");
+      slider4.value = frameArray[frameCounter][3];
+
+      var slider5 = document.getElementById("tail1_theta");
+      slider5.value = frameArray[frameCounter][TAIL1_ID + 4];
+      var slider6 = document.getElementById("tail2_theta");
+      slider6.value = frameArray[frameCounter][TAIL2_ID + 4];
+
+      var slider7 = document.getElementById("tail3_theta");
+      slider7.value = frameArray[frameCounter][TAIL3_ID + 4];
+
+      var slider8 = document.getElementById("tail4_theta");
+      slider8.value = frameArray[frameCounter][TAIL4_ID + 4];
+
+      var slider9 = document.getElementById("neck1_theta");
+
+      slider9.value = frameArray[frameCounter][NECK11_ID + 4];
+
+      var slider10 = document.getElementById("neck12_theta");
+      slider10.value = frameArray[frameCounter][NECK12_ID + 4];
+
+      var slider10 = document.getElementById("neck13_theta");
+      slider10.value = frameArray[frameCounter][NECK13_ID + 4];
+
+      var slider10 = document.getElementById("neck14_theta");
+      slider10.value = frameArray[frameCounter][NECK14_ID + 4];
+
+      var slider10 = document.getElementById("neck15_theta");
+      slider10.value = frameArray[frameCounter][NECK15_ID + 4];
+
+      var slider10 = document.getElementById("mount1_theta");
+      slider10.value = frameArray[frameCounter][MOUTH1_ID + 4];
+
+      var slider10 = document.getElementById("neck2_theta");
+      slider10.value = frameArray[frameCounter][NECK21_ID + 4];
+
+      var slider10 = document.getElementById("neck22_theta");
+      slider10.value = frameArray[frameCounter][NECK22_ID + 4];
+
+      var slider10 = document.getElementById("neck23_theta");
+      slider10.value = frameArray[frameCounter][NECK23_ID + 4];
+
+      var slider10 = document.getElementById("neck24_theta");
+      slider10.value = frameArray[frameCounter][NECK24_ID + 4];
+
+      var slider10 = document.getElementById("neck25_theta");
+
+      slider10.value = frameArray[frameCounter][NECK25_ID + 4];
+
+      var slider10 = document.getElementById("mount2_theta");
+      slider10.value = frameArray[frameCounter][MOUTH2_ID + 4];
+
+      var slider10 = document.getElementById("neck3_theta");
+      slider10.value = frameArray[frameCounter][NECK31_ID + 4];
+
+      var slider10 = document.getElementById("neck32_theta");
+      slider10.value = frameArray[frameCounter][NECK32_ID + 4];
+
+      var slider10 = document.getElementById("neck33_theta");
+      slider10.value = frameArray[frameCounter][NECK33_ID + 4];
+
+      var slider10 = document.getElementById("neck34_theta");
+      slider10.value = frameArray[frameCounter][NECK35_ID + 4];
+
+      var slider10 = document.getElementById("neck35_theta");
+      slider10.value = frameArray[frameCounter][NECK35_ID + 4];
+
+      var slider10 = document.getElementById("mount3_theta");
+      slider10.value = frameArray[frameCounter][MOUTH3_ID + 4];
+
+      var slider10 = document.getElementById("leg11_theta");
+      slider10.value = frameArray[frameCounter][LEG11_ID + 4];
+
+      var slider10 = document.getElementById("leg12_theta");
+      slider10.value = frameArray[frameCounter][LEG12_ID + 4];
+      var slider10 = document.getElementById("leg21_theta");
+      slider10.value = frameArray[frameCounter][LEG21_ID + 4];
+      var slider10 = document.getElementById("leg22_theta");
+      slider10.value = frameArray[frameCounter][LEG22_ID + 4];
+      var slider10 = document.getElementById("leg31_theta");
+      slider10.value = frameArray[frameCounter][LEG31_ID + 4];
+
+      var slider10 = document.getElementById("leg32_theta");
+      slider10.value = frameArray[frameCounter][LEG32_ID + 4];
+      var slider10 = document.getElementById("leg33_theta");
+      slider10.value = frameArray[frameCounter][LEG33_ID + 4];
+      var slider10 = document.getElementById("leg41_theta");
+      slider10.value = frameArray[frameCounter][LEG41_ID + 4];
+      var slider10 = document.getElementById("leg42_theta");
+      slider10.value = frameArray[frameCounter][LEG42_ID + 4];
+      var slider10 = document.getElementById("leg43_theta");
+      slider10.value = frameArray[frameCounter][LEG43_ID + 4];
+      console.log(frameCounter);
+      frameCounter++;
+    }
+  }
+}
+
+function AddFrame() {
+  var frame_counter = $("#frame_counter");
+  if (frame_counter.val() > 0) {
+    var lastFrameJSONCLONE = copyJson(lastFrameJSON);
+    lastFrameJSON = copyJson(frameJSON);
+
+    var frameJSONCLONE = copyJson(frameJSON);
+
+    var farray = FrameJSONToArray(frameJSONCLONE);
+    var flarray = FrameJSONToArray(lastFrameJSONCLONE);
+
+    for (var i = 0; i < frame_counter.val(); i++) {
+      var tempArray = [];
+      for (var m = 0; m < flarray.length; m++) {
+        if (!(farray[m] == null)) {
+          tempArray[m] =
+            ((parseFloat(farray[m]) - parseFloat(flarray[m])) /
+              frame_counter.val()) *
+              (i + 1) +
+            parseFloat(flarray[m]);
+        }
+      }
+      frameArray.push(tempArray.slice());
+    }
+    console.log(frameArray);
+  }
+}
+function addMiddleFrames(frame_count, frame_json) {}
+
+function addInitialFrame() {
+  lastFrameJSON = JSON.parse(JSON.stringify(frameJSON));
+}
+
+function copyJson(json) {
+  return JSON.parse(JSON.stringify(json));
+}
+
+function FrameJSONToArray(json) {
+  var array = [];
+  array.push(json.slider_bodyX);
+  array.push(json.slider_bodyY);
+  array.push(json.slider_bodyZ);
+  array.push(json.slider_bodyRY);
+  array.push(...json.thetaAngle);
+  return array;
+}
+
+document.getElementById("saveLoader").onchange = function () {
+  console.log("reached");
+  let file_reader = new FileReader();
+
+  file_reader.addEventListener(
+    "load",
+    (e) => {
+      var json = JSON.parse(file_reader.result);
+      //console.log(json);
+      frameArray = json.array;
+    },
+    false
+  );
+  file_reader.readAsText(this.files[0]);
+};
