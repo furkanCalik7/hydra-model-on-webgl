@@ -1,6 +1,7 @@
 var canvas;
 var gl;
 var vPosition;
+var vTextCoord;
 
 // Animation variables
 var frameArray = []; // Holds the thetas at each frames
@@ -456,6 +457,37 @@ function bodyRender() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+  console.log("reached3");
+  gl.bindBuffer(gl.ARRAY_BUFFER, BODY_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+  console.log("reached1");
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("body-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, BODY_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -482,6 +514,36 @@ function tail1Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL1_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("neck-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, TAIL1_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -570,9 +632,7 @@ function neck11Render() {
   instanceMatrix = translate(0.03, -0.08, 2);
   // Angle value
   instanceMatrix = mult(instanceMatrix, rotate(thetaAngle[NECK11_ID], 0, 0, 1));
-
   instanceMatrix = mult(instanceMatrix, translate(-0.03, 0.08, -2));
-
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   gl.bindBuffer(gl.ARRAY_BUFFER, NECK11_MESH.vertexBuffer);
@@ -585,6 +645,36 @@ function neck11Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, NECK11_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("neck-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, NECK11_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -612,6 +702,36 @@ function neck21Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, NECK21_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("neck-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, NECK21_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -638,6 +758,36 @@ function neck31Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, NECK31_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("neck-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, NECK31_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -655,16 +805,9 @@ function neck12Render() {
   instanceMatrix = mult(instanceMatrix, scale4(0.7, 0.7, 0.7));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
-  gl.bindBuffer(gl.ARRAY_BUFFER, NECK21_MESH.vertexBuffer);
-  gl.vertexAttribPointer(
-    vPosition,
-    NECK21_MESH.vertexBuffer.itemSize,
-    gl.FLOAT,
-    false,
-    0,
-    0
-  );
+  gl.bindBuffer(gl.ARRAY_BUFFER, NECK12_MESH.vertexBuffer);
   gl.enableVertexAttribArray(vPosition);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, NECK21_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -976,6 +1119,36 @@ function head1Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, TAIL1_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("body-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, HEAD1_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1001,6 +1174,36 @@ function head2Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, HEAD2_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("body-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, HEAD2_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1026,6 +1229,36 @@ function head3Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, HEAD3_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("body-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, HEAD3_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1048,6 +1281,36 @@ function eye1Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, EYE1_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("eye-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, EYE1_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1070,6 +1333,36 @@ function eye2Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, EYE2_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("eye-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, EYE2_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1091,6 +1384,36 @@ function eye3Render() {
     0,
     0
   );
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, EYE3_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("eye-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.enableVertexAttribArray(vPosition);
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, EYE3_MESH.indexBuffer);
   gl.drawElements(
@@ -1192,6 +1515,36 @@ function leg11Render() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, LEG11_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("neck-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, LEG11_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1532,6 +1885,7 @@ function leg44Render() {
 function meshInitilization() {
   BODY_MESH = new OBJ.Mesh($("#body_data").html());
   TAIL1_MESH = new OBJ.Mesh($("#tail1_data").html());
+  console.log(TAIL1_MESH);
   TAIL2_MESH = new OBJ.Mesh($("#tail2_data").html());
   TAIL3_MESH = new OBJ.Mesh($("#tail3_data").html());
   TAIL4_MESH = new OBJ.Mesh($("#tail4_data").html());
@@ -1726,7 +2080,7 @@ window.onload = function init() {
   });
 
   gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   program = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -1736,13 +2090,11 @@ window.onload = function init() {
   constructCoordinateSystem();
   modelViewMatrix = mat4();
 
-  var cBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  var textBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, textBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
 
-  var vColor = gl.getAttribLocation(program, "vColor");
-  gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(vColor);
+  vTextCoord = gl.getAttribLocation(program, "vTextCoord");
 
   meshInitilization();
 
