@@ -27,6 +27,7 @@ var bottom = -4.0;
 
 var eye;
 
+
 var BODY_MESH;
 var TAIL1_MESH;
 var TAIL2_MESH;
@@ -70,6 +71,8 @@ var LEG41_MESH;
 var LEG42_MESH;
 var LEG43_MESH;
 var LEG44_MESH;
+
+var FLOOR_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -131,6 +134,7 @@ var LEG41_ID = 39;
 var LEG42_ID = 40;
 var LEG43_ID = 41;
 var LEG44_ID = 42;
+
 
 // Hydra nodes array
 var numOfNodes = 2;
@@ -438,6 +442,31 @@ function preorder(id) {
 
 var instanceMatrix;
 
+function floorRender() {
+  console.log( "girdi" );
+  instanceMatrix = translate(-0.12, -0.02, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(60, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, FLOOR_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    FLOOR_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, FLOOR_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    FLOOR_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
 function bodyRender() {
   instanceMatrix = rotate(60, 1, 0, 0);
   instanceMatrix = mult(
@@ -1883,6 +1912,7 @@ function leg44Render() {
 }
 
 function meshInitilization() {
+  FLOOR_MESH = new OBJ.Mesh($("#floor_data").html());
   BODY_MESH = new OBJ.Mesh($("#body_data").html());
   TAIL1_MESH = new OBJ.Mesh($("#tail1_data").html());
   console.log(TAIL1_MESH);
@@ -1928,6 +1958,10 @@ function meshInitilization() {
   LEG42_MESH = new OBJ.Mesh($("#leg4_2_data").html());
   LEG43_MESH = new OBJ.Mesh($("#leg4_3_data").html());
   LEG44_MESH = new OBJ.Mesh($("#leg4_4_data").html());
+
+  FLOOR_MESH = new OBJ.Mesh($("#floor_data").html());
+
+  OBJ.initMeshBuffers(gl, FLOOR_MESH);
 
   OBJ.initMeshBuffers(gl, BODY_MESH);
   initHydraNodes(BODY_ID);
@@ -2139,6 +2173,7 @@ window.onload = function init() {
 var render = function () {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+
   eye = vec3(radius*Math.sin(theta)*Math.cos(phi), 
         radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
 
@@ -2151,6 +2186,10 @@ var render = function () {
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   sliderInitilization();
+  floorRender();
+
+  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   preorder(BODY_ID);
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
