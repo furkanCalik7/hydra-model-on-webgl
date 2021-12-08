@@ -10,8 +10,8 @@ var lastFrameJSON;
 var frameJSON;
 var intervalID;
 
-var near = -4;
-var far = 4;
+var near = -10;
+var far = 10;
 var radius = 1.0;
 
 
@@ -73,6 +73,7 @@ var LEG43_MESH;
 var LEG44_MESH;
 
 var FLOOR_MESH;
+var GROUND_MESH;
 
 const at = vec3(0.0, 0.0, 0.0);
 const up = vec3(0.0, 1.0, 0.0);
@@ -441,11 +442,63 @@ function preorder(id) {
 }
 
 var instanceMatrix;
+function groundRender() {
+  console.log( "girdi2" );
+  instanceMatrix = translate(-0.12, -0.02, 0);
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 1, 0));
+  instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
+  modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+  gl.bindBuffer(gl.ARRAY_BUFFER, GROUND_MESH.vertexBuffer);
+  gl.vertexAttribPointer(
+    vPosition,
+    GROUND_MESH.vertexBuffer.itemSize,
+    gl.FLOAT,
+    false,
+    0,
+    0
+  );
+  gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ARRAY_BUFFER, GROUND_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("floor-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
 
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, GROUND_MESH.indexBuffer);
+  gl.drawElements(
+    gl.TRIANGLES,
+    GROUND_MESH.indexBuffer.numItems,
+    gl.UNSIGNED_SHORT,
+    0
+  );
+}
 function floorRender() {
   console.log( "girdi" );
   instanceMatrix = translate(-0.12, -0.02, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(60, 0, 0, 1));
+  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 1, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -459,6 +512,35 @@ function floorRender() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
+  gl.bindBuffer(gl.ARRAY_BUFFER, FLOOR_MESH.textureBuffer);
+  gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vTextCoord);
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // Fill the texture with a 1x1 blue pixel.
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    new Uint8Array([0, 0, 255, 255])
+  );
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    document.getElementById("floor-img")
+  );
+  gl.generateMipmap(gl.TEXTURE_2D);
+
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, FLOOR_MESH.indexBuffer);
   gl.drawElements(
     gl.TRIANGLES,
@@ -1960,8 +2042,10 @@ function meshInitilization() {
   LEG44_MESH = new OBJ.Mesh($("#leg4_4_data").html());
 
   FLOOR_MESH = new OBJ.Mesh($("#floor_data").html());
+  GROUND_MESH = new OBJ.Mesh($("#ground_data").html());
 
   OBJ.initMeshBuffers(gl, FLOOR_MESH);
+  OBJ.initMeshBuffers(gl, GROUND_MESH);
 
   OBJ.initMeshBuffers(gl, BODY_MESH);
   initHydraNodes(BODY_ID);
@@ -2187,9 +2271,16 @@ var render = function () {
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   sliderInitilization();
   floorRender();
+  
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+
+  groundRender();
+
+  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix)); 
+  
   preorder(BODY_ID);
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
