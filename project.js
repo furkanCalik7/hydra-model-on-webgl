@@ -10,8 +10,8 @@ var lastFrameJSON;
 var frameJSON;
 var intervalID;
 
-var near = -10;
-var far = 10;
+var near = -19.487171000000007;
+var far = 19.487171000000007;
 var radius = 1.0;
 
 
@@ -20,6 +20,9 @@ var theta = -0.872664625997;
 var phi = 1.570796326794896;
 var dr = (5.0 * Math.PI) / 180.0;
 
+var thetaFloor = 0.174570886003;
+var phiFloor = 2.617993877994;
+var eyeFloor;
 var left = -4.0;
 var right = 4.0;
 var ytop = 4.0;
@@ -169,7 +172,7 @@ function initHydraNodes(id) {
   switch (id) {
     case BODY_ID:
       m = mult(m, scale4(1.5, 3, 3));
-      m = mult(m, translate(-0.5, 0.35, 0));
+      m = mult(m, translate(-0.5, 1.2, 0));
       hydraFigure[BODY_ID] = createNode(m, bodyRender, null, TAIL1_ID);
       var m = mat4();
       break;
@@ -442,10 +445,11 @@ function preorder(id) {
 }
 
 var instanceMatrix;
+
 function groundRender() {
-  console.log( "girdi2" );
+  console.log( "girdi" );
   instanceMatrix = translate(-0.12, -0.02, 0);
-  instanceMatrix = mult(instanceMatrix, rotate(30, 0, 1, 0));
+  instanceMatrix = mult(instanceMatrix, rotate(0, 0, 0, 1));
   instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
   modelViewMatrix = mult(modelViewMatrix, instanceMatrix);
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
@@ -476,6 +480,7 @@ function groundRender() {
     gl.UNSIGNED_BYTE,
     new Uint8Array([0, 0, 255, 255])
   );
+
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(
     gl.TEXTURE_2D,
@@ -483,7 +488,7 @@ function groundRender() {
     gl.RGBA,
     gl.RGBA,
     gl.UNSIGNED_BYTE,
-    document.getElementById("floor-img")
+    document.getElementById("ground-img")
   );
   gl.generateMipmap(gl.TEXTURE_2D);
 
@@ -495,8 +500,9 @@ function groundRender() {
     0
   );
 }
+
 function floorRender() {
-  console.log( "girdi" );
+  //console.log( "girdi" );
   instanceMatrix = translate(-0.12, -0.02, 0);
   instanceMatrix = mult(instanceMatrix, rotate(30, 0, 1, 0));
   instanceMatrix = mult(instanceMatrix, translate(0.12, 0.02, 0));
@@ -568,7 +574,7 @@ function bodyRender() {
     0
   );
   gl.enableVertexAttribArray(vPosition);
-  console.log("reached3");
+  //console.log("reached3");
   gl.bindBuffer(gl.ARRAY_BUFFER, BODY_MESH.textureBuffer);
   gl.vertexAttribPointer(vTextCoord, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vTextCoord);
@@ -586,7 +592,7 @@ function bodyRender() {
     gl.UNSIGNED_BYTE,
     new Uint8Array([0, 0, 255, 255])
   );
-  console.log("reached1");
+  //console.log("reached1");
 
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(
@@ -2198,7 +2204,7 @@ window.onload = function init() {
   });
 
   gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+  gl.clearColor(0.0, 0.0, 1.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   program = initShaders(gl, "vertex-shader", "fragment-shader");
@@ -2223,6 +2229,8 @@ window.onload = function init() {
   document.getElementById("Button1").onclick = function () {
     near *= 1.1;
     far *= 1.1;
+    console.log("near: " + near);
+    console.log("far: " + far);
   };
   document.getElementById("Button2").onclick = function () {
     near *= 0.9;
@@ -2250,6 +2258,9 @@ window.onload = function init() {
     phi -= dr;
     console.log("phi: " + phi);
   };
+  eyeFloor = vec3(radius*Math.sin(thetaFloor)*Math.cos(phiFloor), 
+  radius*Math.sin(thetaFloor)*Math.sin(phiFloor), radius*Math.cos(thetaFloor));
+  console.log("eye: " + eyeFloor);
 
   render();
 };
@@ -2261,8 +2272,29 @@ var render = function () {
   eye = vec3(radius*Math.sin(theta)*Math.cos(phi), 
         radius*Math.sin(theta)*Math.sin(phi), radius*Math.cos(theta));
 
+  //console.log("theta: " + theta);
+  //console.log("phi: " + phi);
+  //console.log("eye: " + eye);
+
+  var floorMatrix = lookAt(eyeFloor, at, up);
+  
   mvMatrix = lookAt(eye, at, up);
   pMatrix = ortho(left, right, bottom, ytop, near, far);
+
+  var floorOrtho = mult(pMatrix, floorMatrix);
+  floorOrtho = mult(floorOrtho, scale4(10, 10, 10));
+  floorOrtho = mult(floorOrtho, translate(0, -5, 0));
+  floorOrtho = mult(floorOrtho, rotate(-13 ,1, 0, 0));
+  
+  
+  //console.log("sliderbody: " + slider_bodyRY);
+  modelViewMatrix = mat4();
+  modelViewMatrix = mult(modelViewMatrix, floorOrtho);
+  
+  gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
+  gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
+
+  floorRender();
 
   modelViewMatrix = mat4();
   modelViewMatrix = mult(modelViewMatrix, mvMatrix);
@@ -2270,17 +2302,17 @@ var render = function () {
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
   sliderInitilization();
-  floorRender();
+  
   
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix));
 
-  groundRender();
+ // groundRender();
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
   gl.uniformMatrix4fv(modelViewLoc, false, flatten(modelViewMatrix)); 
-  
+
   preorder(BODY_ID);
 
   gl.uniformMatrix4fv(projectionLoc, false, flatten(pMatrix));
