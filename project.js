@@ -2204,7 +2204,7 @@ window.onload = function init() {
   });
 
   gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(0.0, 0.0, 1.0, 1.0);
+  gl.clearColor(0.53, 0.81, 0.92, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   program = initShaders(gl, "vertex-shader", "fragment-shader");
